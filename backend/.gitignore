@@ -1,10 +1,35 @@
-# Python-generated files
+
+# Python bytecode
 __pycache__/
-*.py[oc]
+*.py[cod]
+*.pyc
+
+# Build artifacts
 build/
 dist/
 wheels/
-*.egg-info
+*.egg-info/
 
 # Virtual environments
-.venv
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+.env.*
+
+# IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Testing / cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Docker (optional but recommended)
+*.log
