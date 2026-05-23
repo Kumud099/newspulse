@@ -1,52 +1,83 @@
 services:
   backend:
     build:
-      context: ./backend
-    working_dir: /app
+      context: ..
+      dockerfile: deployment/Dockerfile.backend
+
+    working_dir: /app/backend
+
     ports:
       - "8000:8000"
+
     depends_on:
       - postgres
       - redis
+
     env_file:
-      - .env
+      - ../.env
+
     environment:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
-      PYTHONPATH: /app
-    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
+      PYTHONPATH: /app/backend
+      RUN_MIGRATION: "true"
+
+    command: uv run uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
+
+    volumes:
+      - ../backend:/app/backend
+
     restart: unless-stopped
 
   worker:
     build:
-      context: ./backend
-    working_dir: /app
+      context: ..
+      dockerfile: deployment/Dockerfile.backend
+
+    working_dir: /app/backend
+
     depends_on:
       - postgres
       - redis
+
     env_file:
-      - .env
+      - ../.env
+
     environment:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
-      PYTHONPATH: /app
-    command: uv run celery -A app.workers.celery_app worker --loglevel=info
+      PYTHONPATH: /app/backend
+      RUN_MIGRATIONS: "false"
+
+    command: uv run celery -A backend.app.workers.celery_app worker --loglevel=info
+
+    volumes:
+      - ../backend:/app/backend
+
     restart: unless-stopped
 
   postgres:
     image: postgres:16
+
+    ports:
+      - "5431:5432"
+
     env_file:
-      - .env
+      - ../.env
+
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
     restart: unless-stopped
 
   redis:
     image: redis:7
+
     restart: unless-stopped
 
 volumes:

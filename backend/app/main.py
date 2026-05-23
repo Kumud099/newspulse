@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.admin import setup_admin
+from backend.app.admin import setup_admin
 
 
 app= FastAPI()

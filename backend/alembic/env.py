@@ -1,59 +1,45 @@
-from logging.config import fileConfig
-import sys
 import os
+import sys
+from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import engine_from_config, pool
 from alembic import context
 
-# -------------------------------------------------------------------
-# PATH FIX (IMPORTANT for Docker + uv)
-# -------------------------------------------------------------------
-# This allows "app.*" imports to work inside Alembic
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# -----------------------------
+# PATH FIX
+# -----------------------------
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+BACKEND_DIR = os.path.join(BASE_DIR, "backend")
+sys.path.insert(0, BACKEND_DIR)
 
-# -------------------------------------------------------------------
-# IMPORT YOUR MODELS
-# -------------------------------------------------------------------
-from app.models.article import Base  # add more models here later
+# -----------------------------
+# IMPORT MODELS
+# -----------------------------
+from app.models.article import Base,Article
 
-# -------------------------------------------------------------------
-# ALEMBIC CONFIG
-# -------------------------------------------------------------------
+target_metadata = Base.metadata
+
 config = context.config
 
-# Logging setup
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# -------------------------------------------------------------------
-# IMPORTANT: This enables autogenerate
-# -------------------------------------------------------------------
-target_metadata = Base.metadata
 
-
-# -------------------------------------------------------------------
-# OFFLINE MIGRATION MODE
-# -------------------------------------------------------------------
-def run_migrations_offline() -> None:
+def run_migrations_offline():
     url = config.get_main_option("sqlalchemy.url")
 
     context.configure(
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
-        dialect_opts={"paramstyle": "named"},
-        compare_type=True,  # detects column type changes
+        compare_type=True,
     )
 
     with context.begin_transaction():
         context.run_migrations()
 
 
-# -------------------------------------------------------------------
-# ONLINE MIGRATION MODE
-# -------------------------------------------------------------------
-def run_migrations_online() -> None:
+def run_migrations_online():
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
@@ -64,16 +50,13 @@ def run_migrations_online() -> None:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
-            compare_type=True,  # important for schema diff
+            compare_type=True,
         )
 
         with context.begin_transaction():
             context.run_migrations()
 
 
-# -------------------------------------------------------------------
-# ENTRYPOINT
-# -------------------------------------------------------------------
 if context.is_offline_mode():
     run_migrations_offline()
 else:
