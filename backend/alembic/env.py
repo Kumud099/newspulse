@@ -9,12 +9,12 @@ from alembic import context
 # -----------------------------
 # PATH FIX
 # -----------------------------
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 BACKEND_DIR = os.path.join(BASE_DIR, "backend")
 sys.path.insert(0, BACKEND_DIR)
 
 # Load .env for local alembic runs so DATABASE_URL and other env vars are available
-load_dotenv(os.path.join(BASE_DIR, '..', '.env'))
+load_dotenv(os.path.join(BASE_DIR,'.env'))
 
 # -----------------------------
 # IMPORT MODELS
