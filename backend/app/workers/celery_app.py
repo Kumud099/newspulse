@@ -16,4 +16,4 @@ celery_app.conf.update(
     accept_content=["json"],
 )
 
-celery_app.autodiscover_tasks(["app"])
+celery_app.autodiscover_tasks(["backend.app"])
