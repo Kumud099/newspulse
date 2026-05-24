@@ -16,11 +16,6 @@ services:
     env_file:
       - ../.env
 
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-      REDIS_URL: ${REDIS_URL}
-      PYTHONPATH: /app
-      RUN_MIGRATION: "true"
 
     command: uv run uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
 
@@ -43,11 +38,6 @@ services:
     env_file:
       - ../.env
 
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-      REDIS_URL: ${REDIS_URL}
-      PYTHONPATH: /app
-      RUN_MIGRATIONS: "false"
 
     command: uv run celery -A backend.app.workers.celery_app worker --loglevel=info
 
@@ -65,10 +55,6 @@ services:
     env_file:
       - ../.env
 
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
