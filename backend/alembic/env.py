@@ -1,6 +1,7 @@
 import os
 import sys
 from logging.config import fileConfig
+from dotenv import load_dotenv
 
 from sqlalchemy import engine_from_config, pool
 from alembic import context
@@ -11,6 +12,9 @@ from alembic import context
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 BACKEND_DIR = os.path.join(BASE_DIR, "backend")
 sys.path.insert(0, BACKEND_DIR)
+
+# Load .env for local alembic runs so DATABASE_URL and other env vars are available
+load_dotenv(os.path.join(BASE_DIR, '..', '.env'))
 
 # -----------------------------
 # IMPORT MODELS
