@@ -16,7 +16,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 # IMPORT YOUR MODELS
 # -------------------------------------------------------------------
 from app.models.article import Base  # add more models here later
-
+from app.models.article import Article
 # -------------------------------------------------------------------
 # ALEMBIC CONFIG
 # -------------------------------------------------------------------
