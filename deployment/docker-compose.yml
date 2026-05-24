@@ -4,7 +4,7 @@ services:
       context: ..
       dockerfile: deployment/Dockerfile.backend
 
-    working_dir: /app/backend
+    working_dir: /app
 
     ports:
       - "8000:8000"
@@ -19,7 +19,7 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
-      PYTHONPATH: /app/backend
+      PYTHONPATH: /app
       RUN_MIGRATION: "true"
 
     command: uv run uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
@@ -34,7 +34,7 @@ services:
       context: ..
       dockerfile: deployment/Dockerfile.backend
 
-    working_dir: /app/backend
+    working_dir: /app
 
     depends_on:
       - postgres
@@ -46,7 +46,7 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
-      PYTHONPATH: /app/backend
+      PYTHONPATH: /app
       RUN_MIGRATIONS: "false"
 
     command: uv run celery -A backend.app.workers.celery_app worker --loglevel=info

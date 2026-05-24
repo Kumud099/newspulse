@@ -1,8 +1,8 @@
 from sqladmin import Admin, ModelView
 from fastapi import FastAPI
 
-from app.database.db import engine
-from app.models.article import Article
+from .database.db import engine
+from .models.article import Article
 
 class ArticleAdmin(ModelView, model=Article):
     column_list = [
